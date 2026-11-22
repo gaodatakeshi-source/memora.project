@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#5b21b6"><title>Memora - Catatan Harian</title>
+<style>
+*{box-sizing:border-box}html{font-size:16px}
+body{margin:0;font:500 1rem/1.5 system-ui,sans-serif;background:var(--bg);color:var(--fg)}
+body[data-t=terang]{--bg:#f7f6fb;--cd:#fff;--fg:#14111f;--mu:#4b4663;--ac:#5b21b6;--at:#fff;--bd:#d9d2f3;--pl:#c2410c;--pt:#fff}
+body[data-t=gelap]{--bg:#0d0b16;--cd:#1a1727;--fg:#fff;--mu:#cfc8ea;--ac:#c4b5fd;--at:#14111f;--bd:#3b3555;--pl:#fb923c;--pt:#14111f}
+main{max-width:640px;margin:auto;padding:16px 16px 140px}
+section{animation:in .3s ease}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+.card{background:var(--cd);border-radius:20px;padding:16px;margin:0 0 16px;box-shadow:0 2px 10px rgba(60,30,120,.14);animation:in .3s ease}
+h1{font-size:1.5rem;margin:8px 0 12px}h2{font-size:1.2rem;margin:0 0 8px}h3{margin:0 0 6px}p{margin:4px 0}
+button{display:block;width:100%;min-height:56px;margin:6px 0;padding:10px 16px;border:0;border-radius:16px;background:var(--ac);color:var(--at);font:700 1rem system-ui,sans-serif}
+button.s{background:transparent;color:var(--ac);border:2px solid var(--ac)}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.g button{min-height:96px;margin:0;background:var(--cd);color:var(--fg);border:2px solid var(--bd);text-align:left;box-shadow:0 2px 10px rgba(60,30,120,.14)}
+.bg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.bg button{min-height:52px;margin:0}
+input,select,textarea{display:block;width:100%;min-height:56px;padding:10px 12px;margin:6px 0 12px;font:inherit;background:var(--cd);color:var(--fg);border:2px solid var(--mu);border-radius:14px}
+textarea{min-height:150px}input[type=checkbox]{display:inline-block;width:28px;min-height:28px;margin:0 10px 0 0;vertical-align:middle}
+label{display:block;font-weight:700}.ck{padding:10px 0}
+.tgb{display:inline-block;width:auto;min-height:48px;margin:4px 4px 4px 0}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;align-items:flex-end;background:var(--cd);border-top:2px solid var(--bd);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+nav[hidden]{display:none}
+nav button{position:relative;flex:1;min-width:0;min-height:60px;margin:0;padding:4px 0;border-radius:12px;background:transparent;color:var(--mu);font-size:.7rem;font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center}
+nav button span:first-child{font-size:1.5rem;line-height:1.2}
+nav button[aria-current=page]{color:var(--ac);font-weight:900;background:var(--bg);border-bottom:4px solid var(--ac)}
+nav .pl{flex:0 0 72px;height:72px;margin:-30px 4px 0;border-radius:50%;background:var(--pl);color:var(--pt);box-shadow:0 4px 12px rgba(0,0,0,.35)}
+nav .pl span:first-child{font-size:2.6rem}
+body.big .nl{display:none}
+.dot{position:absolute;top:4px;right:22%;width:14px;height:14px;border-radius:50%;background:#dc2626;border:2px solid var(--cd)}
+#tt{position:fixed;top:8px;left:8px;right:8px;z-index:30;padding:12px 16px;border-radius:16px;background:var(--ac);color:var(--at);font-weight:800;opacity:0;pointer-events:none;transition:opacity .2s}
+#tt.on{opacity:1}
+#sh{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55);display:flex;align-items:flex-end}#sh[hidden]{display:none}
+.sp{width:100%;max-width:640px;margin:auto;background:var(--cd);border-radius:24px 24px 0 0;padding:16px 16px 24px;animation:in .25s ease}
+.sp button{text-align:left}
+body[data-t=terang]{--ac2:#1d4ed8;--hg:linear-gradient(135deg,#5b21b6,#1d4ed8)}body[data-t=gelap]{--ac2:#93c5fd;--hg:linear-gradient(135deg,#4c1d95,#1e3a8a)}
+button{background:linear-gradient(135deg,var(--ac),var(--ac2))}.card{border:1px solid var(--bd);border-radius:24px}
+.hero{background:var(--hg);color:#fff;border-radius:28px;padding:22px 20px;margin-bottom:16px;box-shadow:0 8px 24px rgba(60,30,180,.35)}.hero h1,.hero h2{color:#fff;margin:0 0 6px}.hero p{color:#fff}
+.g button{border-left:6px solid var(--ac)}
+.row{display:flex;align-items:center;gap:14px;text-align:left;background:var(--cd);color:var(--fg);border:1px solid var(--bd);box-shadow:0 2px 10px rgba(60,30,120,.12);min-height:76px;margin:10px 0;border-radius:20px}
+.row .ic{flex:0 0 52px;height:52px;border-radius:16px;background:var(--hg);display:grid;place-items:center;font-size:1.6rem}.row span:nth-child(2){flex:1}.row .ch{font-size:1.8rem;color:var(--ac)}
+#sp{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#5b21b6,#1d4ed8);color:#fff;transition:opacity .4s}#sp h1{color:#fff;letter-spacing:.3em;margin:16px 0 4px;font-size:2rem}#sp p{color:#fff;margin:0}#sp .sl svg{animation:pop .8s ease both}@keyframes pop{from{transform:scale(.5) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}.hero svg{display:block;margin-bottom:10px}
+#vw{position:fixed;inset:0;z-index:40;background:#000;display:flex;flex-direction:column;justify-content:center;padding:12px}#vw[hidden]{display:none}#vw img{max-width:100%;max-height:78vh;margin:auto;object-fit:contain}#vw button{background:#fff;color:#000}.th{padding:4px;min-height:0;margin:6px 0}.th img{max-height:220px;object-fit:cover}
+</style></head>
+<body data-t="terang">
+<div id="sp" role="status" aria-label="Memora. Catat hari ini, ingat selamanya."><div class="sl"></div><h1>MEMORA</h1><p>Catat hari ini, ingat selamanya</p></div>
+<div id="lock" hidden><main><h1>MEMORA TERKUNCI</h1><label for="pin">Masukkan PIN 4 angka</label><input id="pin" type="password" inputmode="numeric" maxlength="4" aria-label="Masukkan PIN 4 angka"><button id="bb" hidden aria-label="Buka dengan sidik jari" onclick="bukaBio()">Buka dengan Sidik Jari</button><button aria-label="Buka aplikasi dengan PIN" onclick="bukaPin()">Buka</button></main></div>
+<div id="app"><div id="tt" role="status" aria-live="polite"></div><main id="pg"></main><nav id="nav" aria-label="Menu bawah"></nav>
+<div id="vw" hidden role="dialog" aria-modal="true" aria-label="Lihat foto"><img id="vwi" alt="Foto lampiran"><button aria-label="Tutup foto" onclick="$('vw').hidden=true">Tutup</button></div>
+<div id="sh" hidden onclick="if(event.target==this)tutup()"><div class="sp" role="dialog" aria-modal="true" aria-label="Tambah baru">
+<button aria-label="Catatan Pengeluaran Keuangan. Catat uang keluar atau masuk" onclick="tutup();go('form',{ty:'u'})">💰 <b>Catatan Pengeluaran / Keuangan</b><br><small>Catat uang keluar / masuk</small></button>
+<button aria-label="Jurnal atau Pengalaman. Tulis cerita hari ini" onclick="tutup();go('form',{ty:'j'})">📖 <b>Jurnal / Pengalaman</b><br><small>Tulis cerita hari ini</small></button>
+<button aria-label="Catatan Biasa Saja. Catatan cepat, ide, pengingat" onclick="tutup();go('form',{ty:'c'})">📝 <b>Catatan Biasa Saja</b><br><small>Catatan cepat, ide, pengingat</small></button>
+<button class="s" aria-label="Tutup menu tambah" onclick="tutup()">Tutup</button></div></div></div>
+<script>
+const logo=z=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="${z}" height="${z}" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b21b6"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#lg)"/><path d="M128 368V160l128 128 128-128v208" fill="none" stroke="#fff" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/><circle cx="384" cy="116" r="26" fill="#fbbf24"/></svg>`;
+(function(){const sp=document.getElementById('sp'),h=()=>{sp.style.opacity=0;setTimeout(()=>sp.remove(),400)};sp.querySelector('.sl').innerHTML=logo(120);sp.onclick=h;setTimeout(h,1800);const l=document.createElement('link');l.rel='icon';l.href='data:image/svg+xml,'+encodeURIComponent(logo(64));document.head.appendChild(l)})();
+const $=i=>document.getElementById(i),e=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MD=['Sangat Sedih','Sedih','Biasa Saja','Senang','Sangat Senang','Marah','Capek'],KT=['Makan','Pulsa','Listrik','Jajan','Transport','Kesehatan','Gaji','Lainnya'],TG=['#keluarga','#kerja','#sedih','#belajar','#syukur','#kesehatan'],DP=['Cash','Dompet Digital','Rekening'],NV=['Sangat Bermanfaat','Biasa','Jangan Diulang'];
+const FM={u:[['n','Nominal','number'],['k','Jenis','sel',['Pengeluaran','Pemasukan']],['c','Kategori','sel',KT],['w','Dompet','sel',DP],['d','Keterangan','text',0,1],['t','Tanggal','date'],['r','Ulangi otomatis','sel',['Tidak Ulangi','Setiap Minggu','Setiap Bulan']]],
+j:[['j','Judul','text',0,1],['i','Isi Cerita','ta',0,1],['m','Mood','sel',MD],['g','Tag','tags']],c:[['j','Judul','text',0,1],['i','Isi','ta',0,1]],
+p:[['j','Judul pengalaman','text',0,1],['t','Tanggal','date'],['s','Siapa','text'],['d','Dimana','text'],['a','Apa yang terjadi','ta',0,1],['l','Pelajaran yang didapat','ta',0,1],['n','Nilai','sel',NV]],
+t:[['fr','Dari dompet','sel',DP],['to','Ke dompet','sel',DP],['n','Nominal','number']]};
+const TT={u:'Catatan Keuangan',j:'Jurnal / Pengalaman',c:'Catatan Biasa',p:'Pengalaman',t:'Pindah Dompet'};
+FM.l=[['j','Judul daftar','text',0,1],['i','Isi daftar (satu baris satu item)','ta',0,1]];
+FM.h=[['jn','Jenis','sel',['Saya Berhutang','Orang Berhutang ke Saya']],['nm','Nama orang','text',0,1],['n','Nominal','number'],['jt','Jatuh tempo (boleh kosong)','date'],['d','Keterangan','text',0,1]];
+FM.b=[['n','Nominal pembayaran','number']];Object.assign(TT,{l:'Daftar Centang',h:'Hutang dan Piutang',b:'Catat Pembayaran'});
+const DS=()=>({target:0,tagihan:[],pin:'',tema:'terang',sv:1,mesin:'hp',kec:'Normal',vs:'',font:'Sedang',vib:1,jr:0,ab:0,lb:'',bn:0,read:{},tf:[],gs:'',gk:'',ls:'',bud:{},hn:'',bio:''});
+let D={j:[],u:[],p:[],c:[],tr:[],s:DS()},cur='home',cp,FS,TF=[],uid=Date.now();
+try{const x=JSON.parse(localStorage.getItem('lumina'));if(x&&x.j)D=x}catch(_){}
+const nid=()=>++uid;
+function norm(){['j','u','p','c','tr','l','h'].forEach(k=>D[k]=D[k]||[]);const old=D.s&&!D.s.v2;D.s=Object.assign(DS(),D.s||{});if(old){D.s.v2=1;D.s.tema='terang'}D.s.v2=1;D.j.forEach(x=>{if(x.m=='Biasa')x.m='Biasa Saja'});D.tr.filter(x=>Date.now()-x.at>=30*864e5).forEach(t=>delFo(t.it));D.tr=D.tr.filter(x=>Date.now()-x.at<30*864e5);const R=w=>w=='DANA'?'Dompet Digital':w;D.u.forEach(x=>{if(x.w)x.w=R(x.w)});D.tr.forEach(t=>{if(t.it&&t.it.w)t.it.w=R(t.it.w)});D.s.tf.forEach(x=>{x.fr=R(x.fr);x.to=R(x.to)})}
+const save=()=>{try{localStorage.setItem('lumina',JSON.stringify(D));localStorage.setItem('lumina_tema',D.s.tema)}catch(_){say('Penyimpanan gagal.')}};
+let tm;function say(t,v){const o=$('tt');o.textContent=t;o.classList.add('on');clearTimeout(tm);tm=setTimeout(()=>{o.classList.remove('on');o.textContent=''},6000);if(v)vib(v)}
+function vib(t){try{if(D.s.vib&&navigator.vibrate)navigator.vibrate(t=='l'?[300,150,300]:[60])}catch(_){}}
+function stop(){try{speechSynthesis.cancel()}catch(_){}}
+function beep(){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator();o.connect(a.destination);o.frequency.value=660;o.start();o.stop(a.currentTime+.15)}catch(_){}}
+function speak(t){say(t);try{if(!D.s.sv)return;if(D.s.mesin=='senyap')return vib('s');if(D.s.mesin=='beep')return beep();stop();const u=new SpeechSynthesisUtterance(t);u.lang='id-ID';u.rate={Lambat:.7,Normal:1,Cepat:1.4}[D.s.kec]||1;const v=speechSynthesis.getVoices().find(x=>x.name==D.s.vs);if(v)u.voice=v;speechSynthesis.speak(u)}catch(_){}}
+const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),today=()=>ymd(new Date()),rp=n=>'Rp '+Number(n||0).toLocaleString('id-ID');
+const inW=d=>{const f=(new Date(today()+'T00:00')-new Date(d+'T00:00'))/864e5;return f>=0&&f<7},addD=(s,n)=>{const d=new Date(s+'T00:00');d.setDate(d.getDate()+n);return ymd(d)};
+const btn=(l,f,a,c)=>`<button${c?` class="${c}"`:''} aria-label="${e(a||l)}" onclick="${f}">${e(l)}</button>`;
+const fld=(id,l,m,ta,v)=>`<label for="${id}">${l}</label>${ta?`<textarea id="${id}" aria-label="${l}">${e(v)}</textarea>`:`<input id="${id}" aria-label="${l}" value="${e(v)}">`}${m?btn('Isi dengan suara '+l,`mic('${id}','${l}',this)`,'','s'):''}`;
+const sel=(id,l,o,v,oc)=>`<label for="${id}">${l}</label><select id="${id}" aria-label="${l}"${oc?` onchange="${oc}"`:''}>${(v&&!o.includes(v)?[v,...o]:o).map(x=>`<option${x==v?' selected':''}>${x}</option>`).join('')}</select>`;
+const on=v=>v?'ON':'OFF',tglF=()=>new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+function mic(id,name,b,after){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return say('Browser ini tidak mendukung suara, silakan ketik manual.');
+const old=b.textContent;try{const r=new SR();r.lang='id-ID';r.continuous=false;b.textContent='MENDENGARKAN... SILAKAN BICARA';say('Mendengarkan, silakan bicara');
+r.onresult=ev=>{const t=ev.results[0][0].transcript,el=$(id);el.value=(el.value&&!after?el.value+(el.dataset.sep||' '):'')+t;say(name+' terisi: '+t);after&&after()};
+r.onerror=()=>say('Suara tidak terdengar, coba lagi.');r.onend=()=>{b.textContent=old};r.start()}catch(_){b.textContent=old;say('Suara gagal dimulai, silakan ketik manual.')}}
+function ap(){document.documentElement.style.fontSize={Kecil:'14px',Sedang:'16px','Besar Sekali':'32px'}[D.s.font]||'16px';document.body.classList.toggle('big',D.s.font=='Besar Sekali');document.body.dataset.t=D.s.tema}
+function ganti(){D.s.tema=D.s.tema=='gelap'?'terang':'gelap';ap();save();go(cur,cp);say('Tema diganti ke '+(D.s.tema=='gelap'?'Gelap':'Terang'))}
+function tags(t){const sw=new Set('yang dan atau dengan untuk dari pada saya aku tadi hari ini itu juga tapi karena sudah akan tidak bisa kami kita mereka ada lagi sangat banget udah mau jadi dalam seperti'.split(' ')),c={};(t.toLowerCase().match(/[a-z]{4,}/g)||[]).forEach(w=>{if(!sw.has(w))c[w]=(c[w]||0)+1});return Object.keys(c).sort((a,b)=>c[b]-c[a]).slice(0,3)}
+function tot(){const t=today(),m=t.slice(0,7);let h=0,w=0,b=0,i=0,o=0,bi=0;D.u.forEach(x=>{const n=+x.n||0;if(x.k=='Pemasukan'){i+=n;if(x.t.slice(0,7)==m)bi+=n}else{o+=n;if(x.t==t)h+=n;if(inW(x.t))w+=n;if(x.t.slice(0,7)==m)b+=n}});return{h,w,b,i,o,s:i-o,bi}}
+const bal=w=>D.u.filter(x=>(x.w||'Cash')==w).reduce((a,x)=>a+(x.k=='Pemasukan'?1:-1)*(+x.n||0),0)+D.s.tf.reduce((a,x)=>a+(x.to==w?+x.n:0)-(x.fr==w?+x.n:0),0);
+function tgt(){if(!D.s.target)return'Target tabungan belum diatur.';const t=tot(),s=Math.max(0,t.bi-t.b),p=Math.min(100,Math.round(s/D.s.target*100));return`Sudah terkumpul ${p} persen, tinggal ${rp(Math.max(0,D.s.target-s))} lagi.`}
+function tagih(){const d=new Date();d.setDate(d.getDate()+1);const r=D.s.tagihan.filter(x=>x.d==d.getDate()).map(x=>x.n);return r.length?'Peringatan: besok ada tagihan '+r.join(', ')+'.':''}
+function ms(){const c={};D.j.filter(x=>inW(x.t)).forEach(x=>c[x.m]=(c[x.m]||0)+1);const a=Object.keys(c).map(k=>`${c[k]} hari ${k}`);return a.length?'Minggu ini: '+a.join(', ')+'.':'Minggu ini belum ada jurnal.'}
+function mr(){const r=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=ymd(d);r.push(d.toLocaleDateString('id-ID',{weekday:'long'})+': '+(D.j.filter(x=>x.t==k).map(x=>x.m).join(', ')||'belum ada jurnal'))}return r.join('. ')+'.'}
+function strk(){const s=new Set(D.j.map(x=>x.t));let d=new Date(),n=0;if(!s.has(ymd(d)))d.setDate(d.getDate()-1);while(s.has(ymd(d))){n++;d.setDate(d.getDate()-1)}return n}
+const bdue=()=>(D.j.length+D.u.length+D.p.length+D.c.length>0&&(!D.s.lb||(new Date(today()+'T00:00')-new Date(D.s.lb+'T00:00'))/864e5>=7))||D.s.bn;
+function ulang(){let ch=0;const T=today();D.u.slice().forEach(x=>{if(!x.r)return;let l=x.lr||x.t;for(;;){const d=new Date(l+'T00:00');x.r=='Minggu'?d.setDate(d.getDate()+7):d.setMonth(d.getMonth()+1);const n=ymd(d);if(n>T)break;D.u.push({...x,id:nid(),t:n,r:'',rf:x.id,lr:undefined});l=n;ch++}x.lr=l});if(ch)save()}
+const ttl=(t,x)=>t=='u'?`${x.k} ${rp(x.n)} ${x.c}`:t=='h'?`${x.jn} ${x.nm} ${rp(x.n)}`:(x.j||'Tanpa judul');
+function card(t,x){const i=x.id,B=(l,f,a,c)=>btn(l,f,a,c);let h,b='';
+if(t=='u'){h=`<h3>${x.k} ${rp(x.n)} ${x.r||x.rf?'(Berulang)':''}</h3><p>${x.t} - ${x.c} - Dompet ${x.w||'Cash'}</p><p>${e(x.d)}</p>`;b=(x.r?B('Hentikan Pengulangan',`henti(${i})`,'Hentikan pengulangan '+x.c,'s'):'')}
+else{h=`<h3>${x.fav?'Favorit - ':''}${e(x.j)}</h3><p>${x.t}${x.m?' - Mood: '+x.m:''}${x.n?' - '+x.n:''}</p><p>${e((x.i||x.a||'').slice(0,160))}</p>${x.g&&x.g.length?`<p>Tag: ${e(x.g.join(', '))}</p>`:''}`;b=B('Bacakan',`baca('${t}',${i})`,'Bacakan '+x.j,'s')+(t!='p'?B(x.fav?'Batal Favorit':'Bintang',`fav('${t}',${i})`,(x.fav?'Batalkan favorit ':'Jadikan favorit ')+x.j,'s'):'')}
+return`<div class="card">${h}${phh(x,ttl(t,x))}<div class="bg">${b}${B('Edit',`go('form',{ty:'${t}',id:${i}})`,'Edit '+ttl(t,x))}${B('Hapus',`del('${t}',${i})`,'Hapus '+ttl(t,x),'s')}</div></div>`}
+function baca(t,id){const x=D[t].find(y=>y.id==id);if(x)speak(t=='p'?`${x.j}. Tanggal ${x.t}. Siapa: ${x.s}. Dimana: ${x.d}. Yang terjadi: ${x.a}. Pelajaran: ${x.l}. Nilai: ${x.n}.`:`${x.j}. ${x.m?'Mood '+x.m+'. ':''}${x.i}`)}
+function fav(t,id){const x=D[t].find(y=>y.id==id);x.fav=!x.fav;save();rf();say(x.fav?'Jadi favorit.':'Favorit dibatalkan.','s')}
+function henti(id){const x=D.u.find(y=>y.id==id);x.r='';save();rf();say('Pengulangan dihentikan.','s')}
+function del(t,id){const i=D[t].findIndex(x=>x.id==id);if(i<0)return;D.tr.push({ty:t,it:D[t].splice(i,1)[0],at:Date.now()});save();rf();say('Dipindah ke Tong Sampah.','s')}
+function rf(){cur=='cari'?rc():go(cur,cp)}
+const V={},P={};
+function bx(l,v,f){const I={'Total Jurnal':'📖','Uang Keluar Bulan Ini':'💸','Streak Menulis':'🔥','Mood Terakhir':'😊'}[l];return`<button aria-label="${e(l+': '+v)}" onclick="${f}"><span aria-hidden="true">${I} </span><small>${l}</small><br><b style="font-size:1.25rem">${v}</b></button>`}
+V.home=()=>{const t=tot(),l=D.j[D.j.length-1];return`<div class="hero">${logo(56)}<h1 tabindex="-1">Halo, Kak. Hari ini mau catat apa?</h1><p>${tglF()}</p></div>
+<div class="g">${bx('Total Jurnal',D.j.length+' jurnal',"go('cari','Jurnal Saja')")}${bx('Uang Keluar Bulan Ini',rp(t.b),"go('uang')")}${bx('Streak Menulis',strk()+' hari',"say('Streak menulis kamu '+strk()+' hari berturut-turut.')")}${bx('Mood Terakhir',l?l.m:'Belum ada',"say('Mood terakhir: '+(D.j.length?D.j[D.j.length-1].m:'belum ada'))")}</div>
+${bdue()?`<div class="card"><h2>Pengingat Backup</h2><p>Backup mingguan sudah jadi, tolong simpan ke Drive ya.</p>${btn('Unduh Backup Sekarang',"bk('txt')")}</div>`:''}${tagih()?`<div class="card"><b>${tagih()}</b></div>`:''}${bWarn().length?`<div class="card"><h2>Peringatan Anggaran</h2>${bWarn().map(t=>`<p>${t}</p>`).join('')}</div>`:''}${hDue().length?`<div class="card"><h2>Hutang dan Piutang Jatuh Tempo</h2>${hDue().map(t=>`<p>${e(t)}</p>`).join('')}</div>`:''}
+${btn('Perintah Suara','vc()','Perintah suara')}<div id="vr"></div>
+<div class="card"><h2>Saldo 3 Dompet</h2>${DP.map(w=>`<p><span aria-hidden="true">${{Cash:'💵','Dompet Digital':'📱',Rekening:'🏦'}[w]} </span>${w}: <b>${rp(bal(w))}</b></p>`).join('')}<p><b>Total: ${rp(DP.reduce((a,w)=>a+bal(w),0))}</b></p>${btn('Pindah Dompet',"go('form',{ty:'t'})")}${btn('Buka Halaman Keuangan',"go('uang')",'','s')}</div>
+<div class="card"><h2>Mood Minggu Ini</h2><p>${ms()}</p>${btn('Lihat Ringkasan Mood',"$('mo').textContent=mr();speak(mr())",'Lihat dan dengarkan ringkasan mood')}${btn('Berhenti Bicara','stop()','Berhenti bicara','s')}<p id="mo"></p></div>
+<h2>Jurnal Terakhir</h2>${l?card('j',l):'<p>Belum ada jurnal.</p>'}${btn('Catat Pengalaman',"go('form',{ty:'p'})",'Catat pengalaman','s')}<h2>Lainnya</h2>${row('✅','Daftar Centang',D.l.length+' daftar',"go('daftar')")}${row('🤝','Hutang dan Piutang',D.h.length+' catatan',"go('hutang')")}`};
+let LV;
+function vc(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return say('HP ini tidak mendukung perintah suara.');try{const r=new SR();r.lang='id-ID';r.continuous=false;say('Mendengarkan perintah, silakan bicara...');r.onresult=ev=>cmd(ev.results[0][0].transcript);r.onerror=()=>say('Suara tidak terdengar, coba lagi.');r.start()}catch(_){say('HP ini tidak mendukung perintah suara.')}}
+function cmd(t){const s=t.toLowerCase().replace(/^elingo[, ]*/,'').trim();let m,ty,it,msg;
+if(/pengeluaran|uang keluar/.test(s)){m=s.match(/(\d+(?:[.,]\d+)?)\s*(ribu|rb|juta|jt)?/);if(!m)return say('Nominal tidak terdengar. Coba: catat pengeluaran 20 ribu buat makan.');
+const n=Math.round(m[2]?parseFloat(m[1].replace(',','.'))*(/ju|jt/.test(m[2])?1e6:1e3):parseFloat(m[1].replace(/[.,]/g,''))),c=KT.find(k=>s.includes(k.toLowerCase()))||'Lainnya';
+ty='u';it={id:nid(),t:today(),k:'Pengeluaran',n,c,d:'Dari perintah suara',w:'Cash'};msg=`Pengeluaran ${rp(n)} buat ${c}, sudah dicatat. Benar?`}
+else if(/jurnal/.test(s)){const i=(s.split('jurnal')[1]||'').trim()||s;ty='j';it={id:nid(),t:today(),m:/sangat senang/.test(s)?'Sangat Senang':/senang/.test(s)?'Senang':/sangat sedih/.test(s)?'Sangat Sedih':/sedih/.test(s)?'Sedih':/marah/.test(s)?'Marah':/capek/.test(s)?'Capek':'Biasa Saja',j:'Jurnal suara',i,g:tags(i)};msg=`Jurnal "${i}", sudah dicatat dengan mood ${it.m}. Benar?`}
+else if(/catat/.test(s)){const i=s.replace(/^.*?catat(an)?/,'').trim()||s;ty='c';it={id:nid(),t:today(),j:i.slice(0,40),i};msg=`Catatan "${i}", sudah dicatat. Benar?`}
+else return say('Perintah belum dikenali. Coba: catat pengeluaran 20 ribu buat makan.');
+D[ty].push(it);save();LV={ty,id:it.id};const o=$('vr');if(o)o.innerHTML=`<div class="card"><p>${e(msg)}</p>${btn('Benar',"$('vr').innerHTML=''")}${btn('Salah, Batalkan',"vu()",'Salah, batalkan catatan ini','s')}</div>`;speak(msg)}
+function vu(){if(LV){D[LV.ty]=D[LV.ty].filter(x=>x.id!=LV.id);save();LV=0}go('home');say('Catatan dibatalkan.')}
+V.cari=()=>`<h1 tabindex="-1">Cari</h1>${fld('q','Cari Jurnal / Pengeluaran / Catatan...',1,0,'')}<div id="tgs"></div>${sel('ft','Filter',['Semua','Jurnal Saja','Uang Saja','Catatan Biasa Saja','Hanya Favorit'])}<div id="rs"></div>`;
+P.cari=f=>{TF=[];$('ft').value=f||'Semua';tgr()};
+function tgr(){$('tgs').innerHTML=TG.map(t=>`<button class="s tgb" aria-pressed="${TF.includes(t)}" aria-label="Filter tag ${t}" onclick="tgl('${t}')">${TF.includes(t)?'✔ ':''}${t}</button>`).join('');rc()}
+function tgl(t){TF=TF.includes(t)?TF.filter(x=>x!=t):[...TF,t];tgr()}
+function rc(){const q=($('q').value||'').toLowerCase(),f=$('ft').value,r=[],m=(x,s)=>(!q||s.toLowerCase().includes(q))&&(!TF.length||(x.g&&TF.every(t=>x.g.includes(t))));
+if(f=='Semua'||f=='Jurnal Saja'||f=='Hanya Favorit')D.j.forEach(x=>{if(m(x,x.j+' '+x.i+' '+(x.g||[]).join(' '))&&(f!='Hanya Favorit'||x.fav))r.push(['j',x])});
+if(f=='Semua'||f=='Catatan Biasa Saja'||f=='Hanya Favorit')D.c.forEach(x=>{if(m(x,x.j+' '+x.i)&&(f!='Hanya Favorit'||x.fav))r.push(['c',x])});
+if(f=='Semua'||f=='Uang Saja')D.u.forEach(x=>{if(!TF.length&&m(x,x.c+' '+x.d+' '+x.k))r.push(['u',x])});
+if(f=='Semua')D.p.forEach(x=>{if(!TF.length&&m(x,[x.j,x.s,x.d,x.a,x.l].join(' ')))r.push(['p',x])});
+r.sort((a,b)=>(b[1].fav?1:0)-(a[1].fav?1:0)||(b[1].t>a[1].t?1:-1));$('rs').innerHTML=`<p><b>Ditemukan ${r.length} catatan.</b></p>`+r.map(([t,x])=>card(t,x)).join('')}
+V.uang=()=>{const t=tot();return`<h1 tabindex="-1">Keuangan</h1><div class="card"><p>Total hari ini: ${rp(t.h)}</p><p>Total minggu ini: ${rp(t.w)}</p><p>Total bulan ini: ${rp(t.b)}</p><p>Total pemasukan: ${rp(t.i)}</p><p>Total pengeluaran: ${rp(t.o)}</p><p>Sisa uang: ${rp(t.s)}</p><p><b>${tgt()}</b></p></div>
+${btn('Catat Uang',"go('form',{ty:'u'})")}${btn('Pindah Dompet',"go('form',{ty:'t'})",'','s')}${btn('Dengarkan Laporan Bulanan','lap()')}${btn('Berhenti Bicara','stop()','Berhenti bicara','s')}<p class="card" id="lp">Laporan akan tampil di sini.</p>
+<h2>Anggaran Bulanan</h2>${sel('ba','Kategori anggaran',KT)}<label for="bn">Jatah bulan ini (angka saja)</label><input id="bn" type="number" inputmode="numeric" aria-label="Jatah anggaran bulan ini">${btn('Simpan Anggaran','sBud()')}<div id="bl"></div><h2>Target Tabungan</h2><label for="tt2">Target bulanan, contoh 100000</label><input id="tt2" type="number" inputmode="numeric" aria-label="Target tabungan bulanan" value="${D.s.target||''}">${btn('Simpan Target','sTg()')}
+<h2>Tagihan</h2>${fld('tn','Nama tagihan',0,0,'')}<label for="td">Tanggal tiap bulan (1 sampai 31)</label><input id="td" type="number" inputmode="numeric" aria-label="Tanggal tagihan tiap bulan">${btn('Simpan Tagihan','sT()')}<div id="tl"></div>
+<h2>Daftar Keuangan</h2>${sel('uf','Filter kategori',['Semua',...KT])}<label for="um">Filter bulan</label><input id="um" type="month" aria-label="Filter bulan"><div id="ul"></div>`};
+P.uang=()=>{rul();rtl();rbl()};
+function rul(){const k=$('uf').value,m=$('um').value;$('ul').innerHTML=[...D.u].reverse().filter(x=>(k=='Semua'||x.c==k)&&(!m||x.t.slice(0,7)==m)).map(x=>card('u',x)).join('')||'<p>Belum ada transaksi.</p>'}
+function rtl(){$('tl').innerHTML=D.s.tagihan.map((x,k)=>`<div class="card">Tagihan ${e(x.n)} tiap tanggal ${x.d}${btn('Hapus tagihan',`dT(${k})`,'Hapus tagihan '+x.n,'s')}</div>`).join('')||'<p>Belum ada tagihan.</p>'}
+function sT(){const n=$('tn').value.trim(),d=+$('td').value;if(!n||!(d>=1&&d<=31))return say('Isi nama tagihan dan tanggal 1 sampai 31.');D.s.tagihan.push({n,d});save();$('tn').value=$('td').value='';rtl();say(`Tagihan ${n} tiap tanggal ${d} tersimpan.`,'s')}
+function dT(k){D.s.tagihan.splice(k,1);save();rtl();say('Tagihan dihapus.')}
+function sTg(){D.s.target=+$('tt2').value||0;save();say('Target tabungan disimpan. '+tgt(),'s')}
+function lap(){const m=today().slice(0,7),d=new Date();d.setDate(1);d.setMonth(d.getMonth()-1);const pm=ymd(d).slice(0,7),c={},o={};
+D.u.forEach(x=>{if(x.k=='Pemasukan')return;const n=+x.n||0;if(x.t.slice(0,7)==m)c[x.c]=(c[x.c]||0)+n;if(x.t.slice(0,7)==pm)o[x.c]=(o[x.c]||0)+n});
+const k=Object.keys(c).sort((a,b)=>c[b]-c[a])[0],p=k?o[k]||0:0,t=k?`Bulan ini Kakak paling boros di ${k}, sebesar ${rp(c[k])}. Bulan lalu sebesar ${rp(p)}. ${c[k]>=p?'Naik':'Turun'} ${rp(Math.abs(c[k]-p))}.`:'Bulan ini belum ada pengeluaran.';$('lp').textContent=t;speak(t)}
+const sel2=(id,l,o,v)=>sel(id,l,o,v);
+V.form=a=>{FS=a;const ty=a.ty,x=a.id?D[ty].find(y=>y.id==a.id)||{}:{};
+return`<h1 tabindex="-1">${a.id?'Edit ':''}${TT[ty]}</h1>`+FM[ty].map(([k,l,t,o,m])=>{let v=x[k];if(ty=='l'&&k=='i')v=(x.items||[]).map(q=>q.x).join('\n');if(k=='t'&&!v)v=today();if(k=='r')v=v?'Setiap '+v:'Tidak Ulangi';if(k=='w'&&!v)v='Cash';if(ty=='t'&&k=='to')v=DP[1];
+if(t=='sel')return sel('f_'+k,l,o,v);
+if(t=='tags')return`<fieldset class="card"><legend>Tag (boleh pilih lebih dari satu)</legend>${TG.map(g=>`<label class="ck"><input type="checkbox" class="tg" value="${g}" ${(x.g||[]).includes(g)?'checked':''}>${g}</label>`).join('')}</fieldset>`;
+if(t=='date')return`<label for="f_${k}">${l}</label><input id="f_${k}" type="date" aria-label="${l}" value="${v||''}">`;
+if(t=='number')return`<label for="f_${k}">${l} (angka saja)</label><input id="f_${k}" type="number" inputmode="numeric" aria-label="${l}" value="${v||''}">`;
+return fld('f_'+k,l,m,t=='ta',v||'')}).join('')+(!'tb'.includes(ty)?att():'')+(/^[jcp]$/.test(ty)?att2():'')+btn(a.id?'Simpan Perubahan':'Simpan','sf()')+btn('Batal',"go('home')",'Batal','s')};
+async function sf(){const{ty,id}=FS,o={};FM[ty].forEach(([k,l,t])=>{if(t=='tags')o.g=[...document.querySelectorAll('#pg .tg:checked')].map(c=>c.value);else{let v=$('f_'+k).value;if(k=='r')v=v=='Setiap Minggu'?'Minggu':v=='Setiap Bulan'?'Bulan':'';o[k]=v.trim()}});
+if(ty=='u'||ty=='t'||ty=='h'||ty=='b'){o.n=+o.n;if(!(o.n>0))return say('Nominal belum diisi. Isi angka saja.')}
+if(ty=='b'){const h=D.h.find(y=>y.id==FS.ref);if(!h)return;h.pay=h.pay||[];h.pay.push({t:today(),n:o.n});save();vib('s');go('hutang');return say(sisa(h)<=0?'Pembayaran dicatat. Lunas!':`Pembayaran ${rp(o.n)} dicatat. Sisa ${rp(sisa(h))}.`)}
+if(ty=='t'){if(o.fr==o.to)return say('Dompet asal dan tujuan sama.');D.s.tf.push({id:nid(),t:today(),fr:o.fr,to:o.to,n:o.n});save();vib('s');go('home');return say(`Uang ${rp(o.n)} dipindah dari ${o.fr} ke ${o.to}.`)}
+if(ty=='h'&&!o.nm)return say('Nama orang belum diisi.');if(ty!='u'&&ty!='h'&&!o.j&&!o.i&&!o.a)return say('Judul atau isi masih kosong.');
+if(ty=='l'){const ol=id?(D.l.find(y=>y.id==id)||{}).items||[]:[];o.items=(o.i||'').split('\n').map(z=>z.trim()).filter(Boolean).map(z=>({x:z,d:(ol.find(q=>q.x==z)||{}).d||0}));delete o.i}if(ty=='j'||ty=='c'||ty=='l')o.j=o.j||'Tanpa judul';if(ty=='j')o.g=[...(o.g||[]),...tags(o.j+' '+o.i)];if(!o.t)delete o.t;
+if(MR&&MR.state=='recording')return say('Masih merekam. Tekan Berhenti Rekam dulu.');try{for(const f of [...FP,...AP])if(f.n)await IDB.put(f.id,f.data);for(const k of [...FR,...AR])await IDB.del(k)}catch(_){return say('Lampiran gagal disimpan di HP ini.')}o.fo=FP.map(f=>f.id);o.au=AP.map(f=>f.id);
+if(id)Object.assign(D[ty].find(y=>y.id==id),o);else D[ty].push({id:nid(),t:today(),...o});
+save();vib('s');go(({l:'daftar',h:'hutang'})[ty]||'home');say((id?'Berhasil diubah':'Catatan berhasil disimpan')+(ty=='u'?bw(o.c):''))}
+function ntfs(){const L=[],T=today(),d=new Date();
+if(bdue())L.push({k:'bk',t:'Backup mingguan sudah jadi, tolong simpan ke Drive ya.',go:"go('profil')"});
+if(D.s.jr&&d.getHours()>=20&&!D.j.some(x=>x.t==T))L.push({k:'jr',t:'Waktunya menulis jurnal hari ini (jam 20:00).',go:"go('form',{ty:'j'})"});
+const tg=tagih();if(tg)L.push({k:'tg',t:tg,go:"go('uang')"});
+const nr=D.u.filter(x=>x.rf&&inW(x.t)).length;if(nr)L.push({k:'ur',t:nr+' catatan uang berulang dibuat otomatis minggu ini.',go:"go('uang')"});
+if(d.getDate()>=25||d.getDate()<=2)L.push({k:'lb',t:'Laporan bulanan siap didengarkan di halaman Keuangan.',go:"go('uang')"});
+bWarn().forEach((t,i)=>L.push({k:'bd'+i,t,go:"go('uang')"}));hDue().forEach((t,i)=>L.push({k:'hu'+i,t,go:"go('hutang')"}));
+return L.map(n=>({...n,id:n.k+T,r:!!D.s.read[n.k+T]}))}
+V.notif=()=>{const L=ntfs();return`<h1 tabindex="-1">Notifikasi</h1>${btn('Tandai Semua Sudah Dibaca',"mall()")}`+(L.map(n=>`<button class="s" style="text-align:left" aria-label="${e((n.r?'':'Baru. ')+n.t)}" onclick="D.s.read['${n.id}']=1;save();${n.go}">${n.r?'':'● BARU: '}${e(n.t)}</button>`).join('')||'<p>Belum ada notifikasi.</p>')+(bdue()?btn('Unduh Backup Sekarang',"bk('txt')"):'')};
+function mall(){ntfs().forEach(n=>D.s.read[n.id]=1);save();go('notif');say('Semua sudah dibaca.')}
+function navr(){const n=ntfs().some(x=>!x.r),a={home:0,uang:0,cari:1,notif:3,profil:4,suara:4,tong:4,daftar:0,hutang:0,tampil:4,ingat:4,data:4,aman:4,tentang:4}[cur],I=[['🏠','Beranda',"go('home')"],['🔍','Cari',"go('cari','Semua')"],['＋','Tambah baru','sheet()'],['🔔','Notifikasi',"go('notif')"],['👤','Profil',"go('profil')"]];
+$('nav').hidden=cur=='form';$('nav').innerHTML=I.map((x,i)=>`<button${i==2?' class="pl"':''} aria-label="${x[1]}${i==3&&n?', ada notifikasi baru':''}"${i==a?' aria-current="page"':''} onclick="${x[2]}"><span aria-hidden="true">${x[0]}</span>${i==2?'':`<span class="nl" aria-hidden="true">${x[1]}</span>`}${i==3&&n?'<i class="dot"></i>':''}</button>`).join('')}
+function sheet(){$('sh').hidden=false;$('sh').querySelector('button').focus()}function tutup(){$('sh').hidden=true}
+const row=(ic,t,d,f)=>`<button class="row" aria-label="${e(t+'. '+d)}" onclick="${f}"><span class="ic" aria-hidden="true">${ic}</span><span><b>${t}</b><br><small>${d}</small></span><span class="ch" aria-hidden="true">›</span></button>`,bkp=()=>btn('Kembali ke Pengaturan',"go('profil')",'Kembali ke Pengaturan','s');
+V.profil=()=>`<h1 tabindex="-1">Profil dan Pengaturan</h1><div class="hero"><h2>Kakak</h2><p>Memora - Catatan Harian</p></div>`+row('🎨','Tampilan','Tema dan ukuran huruf',"go('tampil')")+row('🔊','Suara','Mesin suara, kecepatan, tes suara',"go('suara')")+row('⏰','Pengingat dan Getar','Jurnal jam 20:00, getar, notifikasi',"go('ingat')")+row('💾','Backup dan Data','Cadangkan, pulihkan, unduh data',"go('data')")+row('🔒','Keamanan','PIN 4 angka',"go('aman')")+row('🗑️','Tong Sampah',D.tr.length+' item di dalamnya',"go('tong')")+row('ℹ️','Tentang Memora','Versi 3.3',"go('tentang')");
+V.tampil=()=>`<h1 tabindex="-1">Tampilan</h1><div class="card"><h2>Tema</h2><p>Sekarang: ${D.s.tema=='gelap'?'Gelap':'Terang'}</p>${btn('Ganti Tema','ganti()','Ganti tema gelap atau terang')}</div><div class="card"><h2>Ukuran Huruf</h2>${['Kecil','Sedang','Besar Sekali'].map(f=>btn((D.s.font==f?'✔ ':'')+f,`ss('font','${f}')`,'Ukuran huruf '+f+(D.s.font==f?', dipilih':''))).join('')}</div>`+bkp();
+V.ingat=()=>`<h1 tabindex="-1">Pengingat dan Getar</h1><div class="card"><h2>Pengingat Jurnal</h2><p>Ingatkan Saya Menulis Jurnal Setiap Jam 20:00</p>${D.s.jr?'<p><b>Pengingat aktif, jam 20:00</b></p>':''}${btn('Pengingat Jurnal: '+on(D.s.jr),"tg('jr')")}</div><div class="card"><h2>Mode Getar</h2>${btn('Mode Getar: '+on(D.s.vib),"tg('vib')")}</div><div class="card"><h2>Notifikasi Sistem</h2><p>Pengingat muncul saat Memora dibuka.</p>${btn('Aktifkan Notifikasi Sistem','aktifNotif()')}</div>`+bkp();
+V.data=()=>`<h1 tabindex="-1">Backup dan Data</h1><div class="card"><h2>Backup Otomatis</h2>${btn('Backup Otomatis: '+on(D.s.ab),"tg('ab')")}<p>Backup terakhir: ${D.s.lb||'belum pernah'}</p><p>Backup berikutnya: ${D.s.lb?addD(D.s.lb,7):'hari ini'}</p>${btn('Unduh Backup Sekarang',"bk('txt')")}</div><div class="card"><h2>Drive</h2>${btn('Cadangkan ke Drive',"bk('json')")}${btn('Pulihkan dari Drive',"$('rf').click()",'','s')}<input id="rf" type="file" accept=".json,.txt" hidden aria-label="Pilih file backup" onchange="pul(event)"><p>Cara Backup: 1. Tekan Cadangkan. 2. File terunduh. 3. Buka Google Drive. 4. Upload file itu. Cara Pulihkan: 1. Download file dari Drive. 2. Tekan Pulihkan. 3. Pilih file itu.</p></div><div class="card"><h2>Ekspor Laporan</h2>${sel('xj','Jenis data',['Semua Data','Jurnal','Keuangan','Pengalaman','Catatan Biasa','Hutang dan Piutang','Daftar Centang'])}<label for="xm">Bulan (boleh kosong untuk semua)</label><input id="xm" type="month" aria-label="Bulan laporan">${btn('Ekspor ke PDF','exPdf()','Ekspor laporan ke PDF')}${btn('Ekspor ke CSV','exCsv()','Ekspor data ke CSV untuk Excel','s')}<p>PDF berisi teks catatan (tanpa foto). CSV bisa dibuka di Excel atau Google Sheets.</p></div><div class="card"><h2>Data Saya</h2>${btn('Unduh Semua Data Saya','exTxt()')}${btn('Hapus Semua Data','hapus()','Hapus semua data','s')}</div>`+bkp();
+V.aman=()=>`<h1 tabindex="-1">Keamanan</h1><div class="card"><h2>PIN 4 Angka</h2><p>Status: ${D.s.pin?'PIN aktif':'PIN belum aktif'}</p><label for="np">PIN baru, 4 angka</label><input id="np" type="password" inputmode="numeric" maxlength="4" aria-label="PIN baru 4 angka">${btn('Simpan PIN','sPin()')}${btn('Matikan PIN','hPin()','','s')}</div><div class="card"><h2>Kunci Sidik Jari</h2><p>Status: ${D.s.bio?'Sidik jari aktif':'Sidik jari belum aktif'}</p><p>PIN tetap menjadi cadangan kalau sidik jari gagal.</p>${D.s.bio?btn('Matikan Sidik Jari','hBio()','','s'):btn('Aktifkan Sidik Jari','aktifBio()')}</div>`+bkp();
+V.tentang=()=>`<h1 tabindex="-1">Tentang Memora</h1><div class="card">${logo(72)}<p>Versi 3.0. Dibuat untuk memudahkan mencatat dengan TalkBack. Semua data tersimpan di HP ini.</p></div>`+bkp();
+V.suara=()=>{let vs=[];try{vs=speechSynthesis.getVoices().filter(v=>/^id/i.test(v.lang)).map(v=>v.name)}catch(_){}
+const g=(k,L)=>L.map(([v,l])=>btn((D.s[k]==v?'✔ ':'')+l,`ss('${k}','${v}')`,l+(D.s[k]==v?', dipilih':''))).join('');
+return`<h1 tabindex="-1">Pengaturan Suara</h1>${btn('Suara Memora: '+on(D.s.sv),"tg('sv')")}<div class="card"><h2>Mesin Suara</h2>${g('mesin',[['hp','Suara HP (Bawaan)'],['beep','Suara Memora (Sederhana)'],['senyap','Tanpa Suara, Hanya Teks + Getar']])}</div><div class="card"><h2>Kecepatan Bicara</h2>${g('kec',[['Lambat','Lambat'],['Normal','Normal'],['Cepat','Cepat']])}</div>${sel('vs','Pilih Suara',['Suara Default',...vs],D.s.vs||'Suara Default',"ss('vs',this.value=='Suara Default'?'':this.value)")}${btn('Tes Suara',"speak('Halo Kak, ini suara Memora')")}${btn('Berhenti Bicara','stop()','Berhenti bicara','s')}${btn('Kembali ke Pengaturan',"go('profil')",'','s')}`};
+function tg(k){D.s[k]=D.s[k]?0:1;save();go(cur,cp);say(k+' sekarang '+on(D.s[k]))}
+function ss(k,v){D.s[k]=v;save();ap();go(cur,cp);say('Pengaturan disimpan.')}
+V.tong=()=>`<h1 tabindex="-1">Tong Sampah</h1><p>Item dihapus permanen otomatis setelah 30 hari.</p>`+(D.tr.length?btn('Kosongkan Tong Sampah','kosong()','Kosongkan Tong Sampah','s'):'<p>Tong Sampah kosong.</p>')+D.tr.map(t=>`<div class="card"><h3>${e(ttl(t.ty,t.it))}</h3><p>Akan dihapus permanen dalam ${Math.max(0,30-Math.floor((Date.now()-t.at)/864e5))} hari</p><div class="bg">${btn('Pulihkan',`pulih(${t.it.id})`,'Pulihkan '+ttl(t.ty,t.it))}${btn('Hapus Permanen',`hp(${t.it.id})`,'Hapus permanen '+ttl(t.ty,t.it),'s')}</div></div>`).join('')+btn('Kembali ke Pengaturan',"go('profil')",'','s');
+function pulih(id){const i=D.tr.findIndex(x=>x.it.id==id);if(i<0)return;const t=D.tr.splice(i,1)[0];D[t.ty].push(t.it);save();go('tong');say('Berhasil dipulihkan.','s')}
+function hp(id){if(!confirm('Yakin hapus permanen? Tindakan ini tidak bisa dibatalkan'))return;D.tr.filter(x=>x.it.id==id).forEach(t=>delFo(t.it));D.tr=D.tr.filter(x=>x.it.id!=id);save();go('tong');say('Dihapus permanen.')}
+function kosong(){if(!confirm('Yakin hapus permanen? Tindakan ini tidak bisa dibatalkan'))return;D.tr.forEach(t=>delFo(t.it));D.tr=[];save();go('tong');say('Tong Sampah dikosongkan.')}
+const IDB={db:null,open(){return new Promise((r,j)=>{if(this.db)return r(this.db);const q=indexedDB.open('memora',1);q.onupgradeneeded=()=>q.result.createObjectStore('f');q.onsuccess=()=>{this.db=q.result;r(q.result)};q.onerror=()=>j(q.error)})},
+async tx(m,f){const d=await this.open();return new Promise((r,j)=>{const t=d.transaction('f',m),q=f(t.objectStore('f'));t.oncomplete=()=>r(q&&q.result);t.onerror=()=>j(t.error)})},
+get(k){return this.tx('readonly',s=>s.get(k))},put(k,v){return this.tx('readwrite',s=>s.put(v,k))},del(k){return this.tx('readwrite',s=>s.delete(k))},all(){return this.tx('readonly',s=>s.getAllKeys())}};
+const delFo=x=>[...(x.fo||[]),...(x.au||[])].forEach(k=>IDB.del(k).catch(()=>{}));
+async function bkStr(){const foto={};try{for(const k of await IDB.all())foto[k]=await IDB.get(k)}catch(_){}return JSON.stringify({app:'memora',tanggal:today(),data:D,foto})}
+let FP=[],FR=[],FIDX=-1,FAU=0,AP=[],AR=[],MR,MC=[];
+const att=()=>`<div class="card"><h2>Foto Lampiran</h2><div id="fp"></div>${FS.ty=='u'?btn('Foto Struk lalu Scan Otomatis',"fpick(1,-1,1)",'Ambil foto struk lalu scan teks otomatis'):''}${btn('Ambil Foto dengan Kamera',"fpick(1,-1,0)")}${btn('Pilih Foto dari Galeri',"fpick(0,-1,0)",'','s')}<input id="fi" type="file" accept="image/*" hidden aria-label="Pilih foto" onchange="fadd(event)"></div>`;
+function kecil(f){return new Promise((r,j)=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const k=Math.min(1,1600/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);r(c.toDataURL('image/jpeg',.75))};i.onerror=j;i.src=u})}
+function fpick(cam,idx,au){FIDX=idx;FAU=au;const o=$('fi');cam?o.setAttribute('capture','environment'):o.removeAttribute('capture');o.click()}
+async function fadd(ev){const f=ev.target.files[0];ev.target.value='';if(!f)return;try{const d=await kecil(f);if(FIDX>=0&&FP[FIDX]){FP[FIDX].data=d;FP[FIDX].n=1;say('Foto diganti.')}else{FP.push({id:'f'+nid(),data:d,n:1});say('Foto ditambahkan.')}rfp();if(FAU&&FIDX<0)scan(FP.length-1)}catch(_){say('Foto gagal dibaca.')}}
+function rfp(){const o=$('fp');if(!o)return;o.innerHTML=FP.map((f,i)=>`<div class="card"><img src="${f.data}" alt="Foto lampiran ${i+1}" style="width:100%;border-radius:16px">${btn('Ganti Foto',`fpick(0,${i},0)`,'Ganti foto '+(i+1),'s')}${btn('Hapus Foto',`fdel(${i})`,'Hapus foto '+(i+1),'s')}${FS.ty=='u'?btn('Scan Teks dari Foto Ini',`scan(${i})`,'Scan teks dari foto '+(i+1)):''}</div>`).join('')||'<p>Belum ada foto.</p>'}
+function fdel(i){const f=FP.splice(i,1)[0];if(f)FR.push(f.id);rfp();say('Foto dihapus. Tekan Simpan untuk menerapkan.')}
+P.form=a=>{FP=[];FR=[];AP=[];AR=[];if(a.ty=='t'||a.ty=='b')return;{const x0=a.id?D[a.ty].find(y=>y.id==a.id):0;if(a.ty=='l')$('f_i').dataset.sep='\n';if(x0&&x0.au&&x0.au.length)(async()=>{for(const id of x0.au){try{const d=await IDB.get(id);if(d)AP.push({id,data:d})}catch(_){}}rap()})();else rap()}const x=a.id?D[a.ty].find(y=>y.id==a.id):0;if(x&&x.fo&&x.fo.length)(async()=>{for(const id of x.fo){try{const d=await IDB.get(id);if(d)FP.push({id,data:d})}catch(_){}}rfp()})();else rfp()};
+function loadT(){return new Promise((r,j)=>{if(window.Tesseract)return r();const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js';s.onload=r;s.onerror=()=>j();document.head.appendChild(s)})}
+async function scan(i){const f=FP[i];if(!f)return;if(!navigator.onLine)return say('Scan teks butuh internet. Isi manual, atau coba lagi saat ada sinyal. Foto tetap tersimpan.');say('Membaca teks dari foto, mohon tunggu sebentar...');try{await loadT();const r=await Tesseract.recognize(f.data,'ind+eng');parse(r.data.text)}catch(_){say('Scan gagal. Isi manual saja, foto tetap tersimpan.')}}
+function parse(t){const L=t.split('\n').map(x=>x.trim()).filter(Boolean),low=t.toLowerCase(),
+val=(q,st)=>{const r=st?/(?:rp|idr)\.?\s*(\d[\d.,]*)/gi:/\d{1,3}(?:[.,]\d{3})+/g;let a=[],m;while(m=r.exec(q))a.push(parseInt((m[1]||m[0]).replace(/[.,]\d{1,2}$/,'').replace(/[.,]/g,'')));a=a.filter(x=>x>0&&x<1e10);return a.length?Math.max(...a):0},
+tl=L.find(l=>/total|jumlah|bayar|nominal|tagihan/i.test(l)&&/\d{3}/.test(l));let n=tl?val(tl,0)||val(tl,1):0;if(!n)n=val(t,1);if(!n)n=val(t,0);
+let d='';const M={jan:1,feb:2,mar:3,apr:4,mei:5,jun:6,jul:7,agu:8,aug:8,sep:9,okt:10,oct:10,nov:11,des:12,dec:12},a=t.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);
+if(a&&+a[2]<=12)d=`${a[3]}-${a[2].padStart(2,'0')}-${a[1].padStart(2,'0')}`;else{const b=low.match(/(\d{1,2})\s+(jan|feb|mar|apr|mei|jun|jul|agu|aug|sep|okt|oct|nov|des|dec)\w*\s+(\d{4})/);if(b)d=`${b[3]}-${String(M[b[2]]).padStart(2,'0')}-${b[1].padStart(2,'0')}`}
+const k=/makan|resto|kopi|cafe|warung|bakso|nasi|food/.test(low)?'Makan':/pulsa|paket data|kuota/.test(low)?'Pulsa':/listrik|pln|token/.test(low)?'Listrik':/grab|gojek|bensin|pertamina|parkir|tol|ojek/.test(low)?'Transport':/apotek|klinik|rumah sakit|obat/.test(low)?'Kesehatan':'',
+w=/dana|gopay|ovo|shopeepay|linkaja/.test(low)?'Dompet Digital':/bca|bri|bni|mandiri|transfer|rekening/.test(low)?'Rekening':'',ket=(L.find(l=>/[a-z]{3,}/i.test(l))||'').slice(0,40),got=[];
+const S=(id,v)=>{const o=$(id);if(o&&v){o.value=v;return 1}};
+if(S('f_n',n))got.push('nominal '+rp(n));if(S('f_t',d))got.push('tanggal '+d);if(k&&S('f_c',k))got.push('kategori '+k);if(w&&S('f_w',w))got.push('dompet '+w);if(!$('f_d').value&&S('f_d',ket))got.push('keterangan '+ket);
+say(got.length?'Hasil scan mengisi: '+got.join(', ')+'. Periksa dulu, lalu tekan Simpan.':'Teks tidak terbaca jelas. Coba foto lebih dekat dan terang, atau isi manual.')}
+function hyd(){document.querySelectorAll('.ph:not([data-d])').forEach(async el=>{el.dataset.d=1;const t=el.dataset.t,F=el.dataset.f.split(',').filter(Boolean),A=el.dataset.a.split(',').filter(Boolean);
+for(let i=0;i<F.length;i++){try{const d=await IDB.get(F[i]);if(!d)continue;const b=document.createElement('button'),im=new Image();b.className='th s';b.setAttribute('aria-label',`Lihat foto ${i+1} dari ${t}`);b.onclick=()=>lihat(F[i]);im.src=d;im.alt='';im.style.cssText='width:100%;border-radius:12px;display:block';b.appendChild(im);el.appendChild(b)}catch(_){}}
+for(let i=0;i<A.length;i++){try{const d=await IDB.get(A[i]);if(!d)continue;const a=document.createElement('audio');a.controls=true;a.src=d;a.style.cssText='width:100%;margin:6px 0';a.setAttribute('aria-label',`Rekaman suara ${i+1} dari ${t}`);el.appendChild(a)}catch(_){}}})}
+async function lihat(id){try{$('vwi').src=await IDB.get(id);$('vw').hidden=false;$('vw').querySelector('button').focus()}catch(_){say('Foto tidak bisa dibuka.')}}
+const sisa=h=>h.n-(h.pay||[]).reduce((a,x)=>a+x.n,0),prog=l=>`${l.items.filter(q=>q.d).length} dari ${l.items.length} selesai`;
+const hDue=()=>D.h.filter(h=>sisa(h)>0&&h.jt&&h.jt<=addD(today(),1)).map(h=>`${h.jn=='Saya Berhutang'?'Hutang saya ke':'Piutang dari'} ${h.nm}, sisa ${rp(sisa(h))}, jatuh tempo ${h.jt}${h.jt<today()?' (sudah lewat)':''}.`);
+const spent=c=>{const m=today().slice(0,7);return D.u.filter(x=>x.k!='Pemasukan'&&x.c==c&&x.t.slice(0,7)==m).reduce((a,x)=>a+(+x.n||0),0)};
+function bTxt(c){const b=D.s.bud[c],u=spent(c),p=Math.round(u/b*100);return`${c}: terpakai ${rp(u)} dari ${rp(b)} (${p} persen). ${u>b?'LEWAT '+rp(u-b):'Sisa '+rp(b-u)}.${p>=100?'':p>=80?' HAMPIR HABIS.':''}`}
+const bWarn=()=>Object.keys(D.s.bud).filter(c=>spent(c)>=D.s.bud[c]*.8).map(c=>spent(c)>D.s.bud[c]?`Anggaran ${c} sudah lewat.`:`Anggaran ${c} hampir habis.`),bw=c=>D.s.bud[c]&&spent(c)>=D.s.bud[c]*.8?(spent(c)>D.s.bud[c]?' Peringatan: anggaran '+c+' sudah lewat.':' Peringatan: anggaran '+c+' hampir habis.'):'';
+function sBud(){const c=$('ba').value,n=+$('bn').value;if(!(n>0))return say('Isi jatah anggaran dengan angka.');D.s.bud[c]=n;save();$('bn').value='';rbl();say('Anggaran '+c+' disimpan. '+bTxt(c),'s')}
+function dBud(c){delete D.s.bud[c];save();rbl();say('Anggaran dihapus.')}
+function rbl(){const k=Object.keys(D.s.bud);$('bl').innerHTML=k.map(c=>`<div class="card"><p><b>${bTxt(c)}</b></p>${btn('Hapus Anggaran',`dBud('${c}')`,'Hapus anggaran '+c,'s')}</div>`).join('')||'<p>Belum ada anggaran.</p>'}
+const phh=(x,t)=>(x.fo&&x.fo.length)||(x.au&&x.au.length)?`<div class="ph" data-f="${(x.fo||[]).join(',')}" data-a="${(x.au||[]).join(',')}" data-t="${e(t)}"></div>`:'';
+V.daftar=()=>`<h1 tabindex="-1">Daftar Centang</h1>${btn('Buat Daftar Baru',"go('form',{ty:'l'})")}`+([...D.l].reverse().map(l=>`<div class="card"><h3>${e(l.j)}</h3><p id="pr${l.id}">${prog(l)}</p>${l.items.map((q,i)=>`<label class="ck"><input type="checkbox" ${q.d?'checked':''} onchange="cek2(${l.id},${i},this)" aria-label="${e(q.x)}">${e(q.x)}</label>`).join('')}${phh(l,l.j)}<div class="bg">${btn('Edit',`go('form',{ty:'l',id:${l.id}})`,'Edit daftar '+l.j)}${btn('Hapus',`del('l',${l.id})`,'Hapus daftar '+l.j,'s')}</div></div>`).join('')||'<p>Belum ada daftar.</p>');
+function cek2(id,i,el){const l=D.l.find(x=>x.id==id);l.items[i].d=el.checked?1:0;save();$('pr'+id).textContent=prog(l);say(el.checked?'Dicentang. '+prog(l):'Centang dibatalkan.')}
+V.hutang=()=>{const A=D.h.filter(h=>h.jn=='Saya Berhutang'),B=D.h.filter(h=>h.jn!='Saya Berhutang'),sm=a=>a.reduce((t,h)=>t+Math.max(0,sisa(h)),0);
+return`<h1 tabindex="-1">Hutang dan Piutang</h1><div class="card"><p>Total hutang saya (belum dibayar): <b>${rp(sm(A))}</b></p><p>Total orang berhutang ke saya: <b>${rp(sm(B))}</b></p></div>${btn('Catat Hutang atau Piutang',"go('form',{ty:'h'})")}`+([...D.h].reverse().map(h=>{const s=sisa(h);return`<div class="card"><h3>${h.jn=='Saya Berhutang'?'Hutang ke':'Piutang dari'} ${e(h.nm)} ${s<=0?'(LUNAS)':''}</h3><p>Total ${rp(h.n)}. Sudah dibayar ${rp(h.n-Math.max(0,s))}. <b>Sisa ${rp(Math.max(0,s))}</b></p>${h.jt?`<p>Jatuh tempo: ${h.jt}${s>0&&h.jt<today()?' (SUDAH LEWAT)':''}</p>`:''}<p>${e(h.d)}</p>${phh(h,h.nm)}<div class="bg">${s>0?btn('Catat Pembayaran',`go('form',{ty:'b',ref:${h.id}})`,'Catat pembayaran '+h.nm):''}${btn('Edit',`go('form',{ty:'h',id:${h.id}})`,'Edit '+h.nm)}${btn('Hapus',`del('h',${h.id})`,'Hapus '+h.nm,'s')}</div></div>`}).join('')||'<p>Belum ada catatan.</p>')};
+const att2=()=>`<div class="card"><h2>Rekaman Suara</h2><div id="ap"></div><button id="rb" aria-label="Mulai rekam suara" onclick="rek()">Mulai Rekam</button></div>`;
+function rap(){const o=$('ap');if(!o)return;o.innerHTML=AP.map((a,i)=>`<div class="card"><audio controls src="${a.data}" aria-label="Rekaman ${i+1}" style="width:100%"></audio>${btn('Hapus Rekaman',`adel(${i})`,'Hapus rekaman '+(i+1),'s')}</div>`).join('')||'<p>Belum ada rekaman.</p>'}
+function adel(i){const a=AP.splice(i,1)[0];if(a)AR.push(a.id);rap();say('Rekaman dihapus. Tekan Simpan untuk menerapkan.')}
+async function rek(){const b=$('rb');if(MR&&MR.state=='recording'){MR.stop();return}
+if(!navigator.mediaDevices||!window.MediaRecorder)return say('HP ini tidak mendukung rekam suara.');
+try{const st=await navigator.mediaDevices.getUserMedia({audio:true});MC=[];MR=new MediaRecorder(st,{audioBitsPerSecond:32000});MR.ondataavailable=z=>MC.push(z.data);
+MR.onstop=()=>{st.getTracks().forEach(t=>t.stop());const r=new FileReader();r.onload=()=>{AP.push({id:'a'+nid(),data:r.result,n:1});rap();b.textContent='Mulai Rekam';b.setAttribute('aria-label','Mulai rekam suara');say('Rekaman masuk ke formulir. Tekan Simpan untuk menyimpannya.')};r.readAsDataURL(new Blob(MC,{type:MR.mimeType}))};
+MR.start();b.textContent='Berhenti Rekam';b.setAttribute('aria-label','Berhenti rekam suara');say('Sedang merekam. Tekan Berhenti Rekam kalau sudah selesai.','s')}catch(_){say('Mikrofon tidak diizinkan atau tidak tersedia.')}}
+const b64=u=>btoa(String.fromCharCode(...new Uint8Array(u))),ub64=x=>Uint8Array.from(atob(x),c=>c.charCodeAt(0));
+async function bukaBio(){try{const r=await navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),allowCredentials:[{type:'public-key',id:ub64(D.s.bio),transports:['internal']}],userVerification:'required',timeout:60000}});if(r)bukaOK()}catch(_){say('Sidik jari tidak berhasil. Coba lagi atau masukkan PIN.')}}
+async function aktifBio(){if(!D.s.pin)return say('Aktifkan PIN dulu. PIN jadi cadangan kalau sidik jari gagal.');
+try{if(!window.PublicKeyCredential||!(await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()))return say('Sidik jari belum didukung di HP atau mode aplikasi ini.');
+const c=await navigator.credentials.create({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rp:{name:'Memora'},user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'memora',displayName:'Memora'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},timeout:60000}});
+D.s.bio=b64(c.rawId);save();go(cur,cp);say('Kunci sidik jari aktif. Aplikasi akan minta sidik jari saat dibuka.','s')}catch(_){say('Sidik jari gagal diaktifkan. Pastikan sidik jari sudah terdaftar di pengaturan HP.')}}
+function hBio(){D.s.bio='';save();go(cur,cp);say('Kunci sidik jari dimatikan.')}
+function rows(jn,m){const f=x=>!m||(x.t||'').slice(0,7)==m,R=[],A=jn=='Semua Data';
+if(A||jn=='Jurnal')D.j.filter(f).forEach(x=>R.push({jn:'Jurnal',t:x.t,j:x.j,i:x.i,n:'',k:x.m,g:(x.g||[]).join(' ')}));
+if(A||jn=='Keuangan')D.u.filter(f).forEach(x=>R.push({jn:'Keuangan',t:x.t,j:x.k+' - '+x.c,i:x.d,n:x.n,k:x.w||'Cash',g:x.r?'Berulang '+x.r:''}));
+if(A||jn=='Pengalaman')D.p.filter(f).forEach(x=>R.push({jn:'Pengalaman',t:x.t,j:x.j,i:`Siapa: ${x.s}. Dimana: ${x.d}. ${x.a} Pelajaran: ${x.l}`,n:'',k:x.n,g:''}));
+if(A||jn=='Catatan Biasa')D.c.filter(f).forEach(x=>R.push({jn:'Catatan',t:x.t,j:x.j,i:x.i,n:'',k:'',g:''}));
+if(A||jn=='Hutang dan Piutang')D.h.filter(f).forEach(x=>R.push({jn:'Hutang',t:x.t,j:x.jn+' - '+x.nm,i:x.d+' Jatuh tempo: '+(x.jt||'-')+'. Sisa '+rp(sisa(x)),n:x.n,k:sisa(x)<=0?'Lunas':'Belum lunas',g:''}));
+if(A||jn=='Daftar Centang')D.l.filter(f).forEach(x=>R.push({jn:'Daftar',t:x.t,j:x.j,i:x.items.map(q=>(q.d?'[x] ':'[ ] ')+q.x).join('; '),n:'',k:prog(x),g:''}));
+return R.sort((a,b)=>(b.t||'')>(a.t||'')?1:-1)}
+function exCsv(){const jn=$('xj').value,R=rows(jn,$('xm').value);if(!R.length)return say('Tidak ada data untuk diekspor.');const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+dl('memora-'+jn.replace(/ /g,'-').toLowerCase()+'-'+today()+'.csv','\ufeff'+['Jenis,Tanggal,Judul,Isi,Nominal,Info,Tag',...R.map(r=>[r.jn,r.t,r.j,r.i,r.n,r.k,r.g].map(q).join(','))].join('\r\n'),'text/csv');say(`File CSV ${R.length} baris sudah diunduh.`,'s')}
+const wrap=(t,n)=>{const o=[];t.split('\n').forEach(p=>{let l='';p.split(' ').forEach(w=>{while(w.length>n){if(l){o.push(l);l=''}o.push(w.slice(0,n));w=w.slice(n)}if((l+' '+w).trim().length>n){o.push(l);l=w}else l=(l+' '+w).trim()});o.push(l)});return o};
+function mkPdf(I){const W=595,H=842,M=40,P=[],esc=x=>x.replace(/[^\x20-\xFF]/g,'?').replace(/([()\\])/g,'\\$1');let c=[],y=H-M;
+I.forEach(it=>{const h=it.k=='h',h2=it.k=='h2',sz=h?15:h2?11:9,lh=h?22:h2?16:12,n=h?55:h2?70:94;wrap(it.t,n).forEach(l=>{if(y<M+lh){P.push(c);c=[];y=H-M}c.push(`BT /F${h||h2?2:1} ${sz} Tf ${M} ${y} Td (${esc(l)}) Tj ET`);y-=lh})});if(c.length||!P.length)P.push(c);
+let out='%PDF-1.4\n',off=[];const add=b=>{off.push(out.length);out+=off.length+' 0 obj\n'+b+'\nendobj\n'};
+add('<</Type/Catalog/Pages 2 0 R>>');add('<</Type/Pages/Kids['+P.map((_,i)=>(5+i*2)+' 0 R').join(' ')+']/Count '+P.length+'>>');add('<</Type/Font/Subtype/Type1/BaseFont/Courier/Encoding/WinAnsiEncoding>>');add('<</Type/Font/Subtype/Type1/BaseFont/Helvetica-Bold/Encoding/WinAnsiEncoding>>');
+P.forEach((a,i)=>{const st=a.join('\n')+`\nBT /F1 8 Tf ${M} 20 Td (Halaman ${i+1} dari ${P.length}) Tj ET`;add(`<</Type/Page/Parent 2 0 R/MediaBox[0 0 ${W} ${H}]/Resources<</Font<</F1 3 0 R/F2 4 0 R>>>>/Contents ${6+i*2} 0 R>>`);add(`<</Length ${st.length}>>\nstream\n${st}\nendstream`)});
+const xr=out.length;out+='xref\n0 '+(off.length+1)+'\n0000000000 65535 f \n'+off.map(x=>String(x).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<</Size ${off.length+1}/Root 1 0 R>>\nstartxref\n${xr}\n%%EOF`;return new Uint8Array(Array.from(out,ch=>ch.charCodeAt(0)))}
+function exPdf(){const jn=$('xj').value,m=$('xm').value,R=rows(jn,m);if(!R.length)return say('Tidak ada data untuk diekspor.');
+const I=[{k:'h',t:'Memora - Laporan '+jn},{k:'b',t:'Periode: '+(m||'Semua tanggal')+'. Dibuat: '+today()},{k:'b',t:''}];
+if(jn=='Keuangan'||jn=='Semua Data'){const t=tot();I.push({k:'h2',t:'Ringkasan Keuangan (semua waktu)'},{k:'b',t:'Pemasukan '+rp(t.i)+' | Pengeluaran '+rp(t.o)+' | Sisa '+rp(t.s)},{k:'b',t:DP.map(w=>w+' '+rp(bal(w))).join(' | ')},{k:'b',t:''})}
+R.forEach(r=>{I.push({k:'h2',t:`${r.t||''}  ${r.jn}: ${r.j}`});if(r.n!=='')I.push({k:'b',t:'Nominal: '+rp(r.n)});if(r.k)I.push({k:'b',t:'Info: '+r.k});if(r.i)I.push({k:'b',t:r.i});if(r.g)I.push({k:'b',t:'Tag: '+r.g});I.push({k:'b',t:''})});
+dl('memora-laporan-'+jn.replace(/ /g,'-').toLowerCase()+'-'+today()+'.pdf',mkPdf(I),'application/pdf');say(`File PDF ${R.length} catatan sudah diunduh.`,'s')}
+function go(p,a){cur=p;cp=a;$('sh').hidden=true;stop();$('pg').innerHTML='<section>'+V[p](a)+'</section>';if(P[p])P[p](a);navr();scrollTo(0,0);const h=document.querySelector('#pg h1');if(h)h.focus()}
+function dl(n,s,ty){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:ty}));a.download=n;document.body.appendChild(a);a.click();a.remove()}catch(_){say('Unduhan gagal di perangkat ini.')}}
+async function bk(x){dl('memora-backup-'+today()+'.'+x,await bkStr(),x=='json'?'application/json':'text/plain');D.s.lb=today();D.s.bn=0;save();go(cur,cp);say('File backup sudah diunduh. Silakan buka Google Drive, upload file ini ke folder Memora agar aman saat ganti HP. File ini berisi semua catatan kamu.','s')}
+function pul(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=async()=>{try{let x=JSON.parse(r.result);const fo=x.foto;x=x.data||x;if(!Array.isArray(x.j)||!Array.isArray(x.u)||!Array.isArray(x.p))throw 0;D=x;norm();if(fo){for(const k of await IDB.all())await IDB.del(k);for(const k in fo)await IDB.put(k,fo[k])}save();ap();go('home');say(`Data berhasil dipulihkan. Total ${D.j.length} jurnal, ${D.u.length} transaksi uang, ${D.p.length} pengalaman, ${D.c.length} catatan biasa.`)}catch(_){say('File backup tidak bisa dibaca. Pilih file yang benar.')}ev.target.value=''};r.readAsText(f)}
+function exTxt(){const R=a=>[...a].sort((x,y)=>y.t>x.t?1:-1);let s='MEMORA - SEMUA DATA (TERBARU DULU)\n\nJURNAL\n';
+R(D.j).forEach(x=>s+=`${x.t} | ${x.m} | ${x.j}\n${x.i}\nTag: ${(x.g||[]).join(', ')}\n\n`);s+='KEUANGAN\n';
+R(D.u).forEach(x=>s+=`${x.t} | ${x.k} | ${x.n} | ${x.c} | ${x.w||'Cash'} | ${x.d}\n`);s+='\nCATATAN BIASA\n';
+R(D.c).forEach(x=>s+=`${x.t} | ${x.j}\n${x.i}\n\n`);s+='PENGALAMAN\n';
+R(D.p).forEach(x=>s+=`${x.t} | ${x.j} | Siapa: ${x.s} | Dimana: ${x.d}\n${x.a}\nPelajaran: ${x.l}\nNilai: ${x.n}\n\n`);s+='\nDAFTAR CENTANG\n';D.l.forEach(l=>s+=`${l.j}: ${l.items.map(q=>(q.d?'[x] ':'[ ] ')+q.x).join('; ')}\n`);s+='\nHUTANG DAN PIUTANG\n';D.h.forEach(h=>s+=`${h.jn} | ${h.nm} | ${h.n} | sisa ${sisa(h)} | jatuh tempo ${h.jt||'-'} | ${h.d}\n`);s+='\nANGGARAN\n';Object.keys(D.s.bud).forEach(c=>s+=bTxt(c)+'\n');dl('memora-semua-data-'+today()+'.txt',s,'text/plain');say('File teks sudah diunduh.','s')}
+function sPin(){const p=$('np').value;if(!/^\d{4}$/.test(p))return say('PIN harus 4 angka.');D.s.pin=p;save();$('np').value='';say('PIN aktif.','s')}
+function hPin(){D.s.pin='';D.s.bio='';save();say('PIN dimatikan.')}
+function hapus(){if(!confirm('Yakin hapus semua data?'))return;if(!confirm('Benar-benar yakin? Data tidak bisa kembali.'))return;try{localStorage.clear()}catch(_){}try{IDB.db&&IDB.db.close();IDB.db=null;indexedDB.deleteDatabase('memora')}catch(_){}D={j:[],u:[],p:[],c:[],tr:[],l:[],h:[],s:DS()};ap();go('home');say('Semua data sudah dihapus.')}
+function notif(t){try{if('Notification' in window&&Notification.permission=='granted')new Notification('Memora',{body:t})}catch(_){}}
+function aktifNotif(){if(!('Notification' in window))return say('HP ini belum mendukung notifikasi sistem. Pengingat tampil di dalam aplikasi.');Notification.requestPermission().then(p=>say(p=='granted'?'Notifikasi sistem aktif.':'Notifikasi tidak diizinkan.'))}
+function cek(){const m=[],t=tagih();if(t&&D.s.tn!=today()){D.s.tn=today();save();m.push(t);vib('l')}
+const w=D.s.lastRing,d=w?(new Date(today()+'T00:00')-new Date(w+'T00:00'))/864e5:99;if(d>=7&&D.j.length+D.u.length+D.p.length){const x=tot();D.s.lastRing=today();save();m.push(`Catatan minggu lalu: ${D.j.filter(y=>inW(y.t)).length} jurnal, pengeluaran ${rp(x.w)}, ${D.p.filter(y=>inW(y.t)).length} pengalaman baru.`)}
+if(D.s.jr&&new Date().getHours()>=20&&D.s.jn!=today()&&!D.j.some(x=>x.t==today())){D.s.jn=today();save();m.push('Waktunya menulis jurnal hari ini.');vib('s')}
+const hd=hDue();if(hd.length&&D.s.hn!=today()){D.s.hn=today();save();m.push(hd.join(' '));vib('l')}
+if(m.length){say(m.join(' '));notif(m.join(' '))}navr()}
+function lock(){if(D.s.pin){$('lock').hidden=false;$('app').hidden=true;$('bb').hidden=!D.s.bio;say(D.s.bio?'Aplikasi terkunci. Tempelkan jari, atau masukkan PIN 4 angka.':'Aplikasi terkunci. Masukkan PIN 4 angka.');if(D.s.bio)bukaBio()}}
+function bukaPin(){if($('pin').value===D.s.pin)bukaOK();else say('PIN salah, coba lagi.')}
+function bukaOK(){$('lock').hidden=true;$('app').hidden=false;$('pin').value='';go('home');cek()}
+norm();ulang();ap();
+$('pg').addEventListener('input',()=>{if(cur=='cari')rc();if(cur=='uang')rul()});
+$('pg').addEventListener('change',()=>{if(cur=='cari')rc();if(cur=='uang')rul()});
+new MutationObserver(hyd).observe($('pg'),{childList:true,subtree:true});go('home');lock();
+if(D.s.ab&&bdue()&&!D.s.pin){bkStr().then(t=>{dl('memora-backup-'+today()+'.txt',t,'text/plain');D.s.lb=today();D.s.bn=1;save();go('home');say('Backup mingguan sudah jadi, tolong simpan ke Drive ya.')})}
+cek();setInterval(cek,60000);
+</script></body></html>
